@@ -3,6 +3,7 @@ import Buttons from "./Buttons";
 
 const CalculatorBody = ({ result, setResult }) => {
   let operators = ["+", "-", "/", "*", "%"];
+  let lastOperator = "";
   const clearDisplay = () => {
     setResult("0.00");
     return;
@@ -44,10 +45,26 @@ const CalculatorBody = ({ result, setResult }) => {
 
       const lastChar = result.slice(-1);
       if (operators.includes(lastChar)) {
-        setResult(removeLastChar(result));
+        setResult(removeLastChar(result) + val);
+        return;
       }
+
+      setResult((prevVal) => prevVal + val);
+      return;
     }
 
+    if (val === ".") {
+      const lastOperator = operators.find((op) => result.includes(op));
+      const lastOperatorIndex = result.lastIndexOf(lastOperator);
+
+      const afterLastOperator = result.slice(lastOperatorIndex + 1);
+      if (afterLastOperator.includes(".")) {
+        return;
+      }
+
+      setResult((prevVal) => prevVal + val);
+      return;
+    }
     setResult((prevVal) => {
       if (prevVal === "0.00") {
         return val;
