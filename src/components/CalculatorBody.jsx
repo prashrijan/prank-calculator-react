@@ -1,7 +1,17 @@
 import "../App.css";
 import Buttons from "./Buttons";
 
-const CalculatorBody = ({ result, setResult, clearInput, setClearInput }) => {
+const CalculatorBody = ({ result, setResult }) => {
+  let operators = ["+", "-", "/", "*", "%"];
+  const clearDisplay = () => {
+    setResult("0.00");
+    return;
+  };
+
+  const removeLastChar = (str) => {
+    return str.slice(0, -1);
+  };
+
   const calculateOperations = (e) => {
     const val = e.target.innerText;
 
@@ -11,9 +21,31 @@ const CalculatorBody = ({ result, setResult, clearInput, setClearInput }) => {
       setResult(answer);
       return;
     }
+
     if (val === "AC") {
-      setResult("0.00");
+      clearDisplay();
       return;
+    }
+
+    if (val === "C") {
+      if (result === "0.00" || result === "") {
+        clearDisplay();
+      } else {
+        const newResult = removeLastChar(result);
+        setResult(newResult || "0.00");
+      }
+      return;
+    }
+
+    if (operators.includes(val)) {
+      if (result === "0.00" || result === "") {
+        return;
+      }
+
+      const lastChar = result.slice(-1);
+      if (operators.includes(lastChar)) {
+        setResult(removeLastChar(result));
+      }
     }
 
     setResult((prevVal) => {
