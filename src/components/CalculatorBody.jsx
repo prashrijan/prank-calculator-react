@@ -5,6 +5,13 @@ const CalculatorBody = ({ result, setResult, clearInput, setClearInput }) => {
   const calculateOperations = (e) => {
     const val = e.target.innerText;
 
+    if (val === "=") {
+      let answer = eval(result);
+
+      setResult(answer);
+      return;
+    }
+
     setResult((prevVal) => {
       if (prevVal === "0.00") {
         return val;
