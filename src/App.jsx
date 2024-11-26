@@ -1,14 +1,15 @@
-import { useState } from "react";
-
 import "./App.css";
+import CalculatorBody from "./components/CalculatorBody";
+import Display from "./components/Display";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
-      <h2>Prank Calculator</h2>
-    </>
+    <div className="wrapper">
+      <div className="calculator-container">
+        <Display />
+        <CalculatorBody />
+      </div>
+    </div>
   );
 }
 
