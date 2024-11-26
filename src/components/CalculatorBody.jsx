@@ -11,6 +11,10 @@ const CalculatorBody = ({ result, setResult, clearInput, setClearInput }) => {
       setResult(answer);
       return;
     }
+    if (val === "AC") {
+      setResult("0.00");
+      return;
+    }
 
     setResult((prevVal) => {
       if (prevVal === "0.00") {
