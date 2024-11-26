@@ -1,9 +1,9 @@
 import "../App.css";
 
-const Display = () => {
+const Display = ({ result }) => {
   return (
     <div className="display">
-      <div className="input">0.00</div>
+      <div className="input">{result}</div>
     </div>
   );
 };
