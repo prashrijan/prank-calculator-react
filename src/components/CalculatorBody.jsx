@@ -1,77 +1,73 @@
+import { useState } from "react";
 import "../App.css";
 import Buttons from "./Buttons";
 
 const CalculatorBody = ({ result, setResult }) => {
   let operators = ["+", "-", "/", "*", "%"];
-  let lastOperator = "";
+
+  let [lastOperator, setLastOperator] = useState("");
+
   const clearDisplay = () => {
     setResult("0.00");
+    setLastOperator("");
     return;
   };
 
-  const removeLastChar = (str) => {
-    return str.slice(0, -1);
+  const handleClear = () => {
+    if (result === "0.00" || result === "") {
+      clearDisplay();
+    } else {
+      const newResult = result.slice(0, -1);
+      setResult(newResult || "0.00");
+    }
   };
 
+  const calculateResult = () => {
+    try {
+      const answer = eval(result);
+      setResult(answer.toString());
+    } catch {
+      setResult("Error");
+    }
+  };
+
+  const handleOpertors = (val) => {
+    const lastChar = result.slice(-1);
+    if (operators.includes(lastChar)) {
+      setResult(result.slice(0, -1) + val);
+    } else {
+      setResult(result + val);
+    }
+    setLastOperator(val);
+  };
+
+  const handleDecimals = () => {
+    const lastOperatorIndex = result.lastIndexOf(lastOperator);
+    const lastNumberSet = result.slice(lastOperatorIndex + 1);
+
+    if (lastNumberSet.includes(".")) return;
+    if (!lastOperator && result.includes(".")) return;
+
+    setResult(result + ".");
+  };
+
+  const handleInput = (val) => {
+    if (result === "0.00") {
+      setResult(val);
+    } else {
+      setResult(result + val);
+    }
+  };
   const calculateOperations = (e) => {
     const val = e.target.innerText;
 
-    if (val === "=") {
-      let answer = eval(result);
+    if (val === "AC") return clearDisplay();
+    if (val === "C") return handleClear();
+    if (val === "=") return calculateResult();
+    if (operators.includes(val)) return handleOpertors(val);
+    if (val === ".") return handleDecimals();
 
-      setResult(answer);
-      return;
-    }
-
-    if (val === "AC") {
-      clearDisplay();
-      return;
-    }
-
-    if (val === "C") {
-      if (result === "0.00" || result === "") {
-        clearDisplay();
-      } else {
-        const newResult = removeLastChar(result);
-        setResult(newResult || "0.00");
-      }
-      return;
-    }
-
-    if (operators.includes(val)) {
-      if (result === "0.00" || result === "") {
-        return;
-      }
-
-      const lastChar = result.slice(-1);
-      if (operators.includes(lastChar)) {
-        setResult(removeLastChar(result) + val);
-        return;
-      }
-
-      setResult((prevVal) => prevVal + val);
-      return;
-    }
-
-    if (val === ".") {
-      const lastOperator = operators.find((op) => result.includes(op));
-      const lastOperatorIndex = result.lastIndexOf(lastOperator);
-
-      const afterLastOperator = result.slice(lastOperatorIndex + 1);
-      if (afterLastOperator.includes(".")) {
-        return;
-      }
-
-      setResult((prevVal) => prevVal + val);
-      return;
-    }
-    setResult((prevVal) => {
-      if (prevVal === "0.00") {
-        return val;
-      }
-
-      return prevVal + val;
-    });
+    handleInput(val);
   };
 
   return (
